@@ -74,8 +74,10 @@ else:  # 2.6, 2.7
                 keywords = {}
             parts = len(func.args), keywords.keys()
             func = func.func
-        if not inspect.isfunction(func):
-            raise TypeError('%r is not a Python function' % func)
+        # Py2 Stdlib uses isfunction(func) which is too strict for Cython-compiled
+        # functions though such have perfectly usable func_code, func_defaults.
+        if not (hasattr(func, "func_code") and hasattr(func, "func_defaults")):
+            raise TypeError('{!r} missing func_code or func_defaults'.format(func))
         args, varargs, varkw = inspect.getargs(func.__code__)
         func_defaults = func.__defaults__
         if func_defaults is None:
