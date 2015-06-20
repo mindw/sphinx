@@ -196,6 +196,8 @@ class HTMLTranslator(BaseTranslator):
             atts['class'] += ' internal'
         else:
             atts['class'] += ' external'
+            if self.builder.embedded and '://' in node['refuri']:
+                atts['target'] = "_blank"
         if 'refuri' in node:
             atts['href'] = node['refuri'] or '#'
             if self.settings.cloak_email_addresses and \
