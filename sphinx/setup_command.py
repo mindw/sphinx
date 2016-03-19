@@ -138,6 +138,11 @@ class BuildDoc(Command):
         self.mkpath(self.builder_target_dir)
 
     def run(self):
+        # make sure the install_requires packages are installed (same as test)
+        if self.distribution.install_requires:
+            self.distribution.fetch_build_eggs(
+                self.distribution.install_requires)
+
         if not color_terminal():
             nocolor()
         if not self.verbose:
